@@ -1,0 +1,6 @@
+{
+  "name": "Estimador Agéntico de Copago",
+  "description": "Asistente virtual empático para estimar beneficios médicos y copagos basados en cobertura y red hospitalaria.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
