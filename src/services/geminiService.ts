@@ -29,12 +29,28 @@ export async function getMedicalAgentResponse(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userMessage, history }),
     });
-    const json = (await response.json()) as Partial<MedicalAgentResult> & { error?: string };
+    const raw = await response.text();
+    let json: (Partial<MedicalAgentResult> & { error?: string }) | null = null;
+    try {
+      json = JSON.parse(raw) as Partial<MedicalAgentResult> & { error?: string };
+    } catch {
+      json = null;
+    }
     if (!response.ok) {
       return {
-        displayText: json.error || "No se pudo consultar el agente IA en este momento.",
+        displayText:
+          json?.error ||
+          `No se pudo consultar el agente IA (HTTP ${response.status}).`,
         structured: null,
         rawText: "",
+      };
+    }
+    if (!json) {
+      return {
+        displayText:
+          "Respuesta invalida del servidor IA. Verifica configuracion de rutas en Vercel (/api/chat).",
+        structured: null,
+        rawText: raw,
       };
     }
     return {
