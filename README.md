@@ -122,7 +122,6 @@ para procesar consultas médicas conversacionales y generar recomendaciones inte
 
 Desarrollado por Jareth Rojas, Cristina Villacís, Liskeyla Macías.
 
----
 
 ---
 
