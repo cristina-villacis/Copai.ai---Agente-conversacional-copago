@@ -1,6 +1,6 @@
 # Copai.ai — Agente conversacional de copago (SaludPredict)
 
-Demo frontend (Vite + React + TypeScript + Tailwind) con chat Gemini: síntomas → especialidad, copagos y hospitales recomendados (demo Ecuador).
+Demo React (Vite + TypeScript + Tailwind) con API serverless para chat Gemini privado: síntomas → especialidad, copagos y hospitales recomendados (demo Ecuador).
 
 ## Requisitos
 
@@ -24,19 +24,19 @@ No subas la clave al repositorio. Crea un archivo `.env.local` en la raíz (est�
 cp .env.example .env.local
 ```
 
-Edita `.env.local`:
+Edita `.env.local` (clave privada de servidor):
 
 ```env
-VITE_GEMINI_API_KEY=tu_api_key_aqui
+GEMINI_API_KEY=tu_api_key_aqui
 ```
 
 Opcional:
 
 ```env
-VITE_GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
-Si usas restricciones de referrer en la API key, permite el origen de desarrollo (`http://localhost:3000` o el puerto que use Vite).
+La API key ya no se expone al navegador: el frontend llama a `/api/chat` y Gemini se consulta desde backend.
 
 ## Ejecutar en desarrollo
 
@@ -64,8 +64,8 @@ El proyecto ya está en React + Vite, así que Vercel lo detecta como frontend e
    - **Build Command:** `npm run build`
    - **Output Directory:** `dist`
 4. En **Environment Variables**, agrega:
-   - `VITE_GEMINI_API_KEY` = tu clave real
-   - `VITE_GEMINI_MODEL` (opcional, por ejemplo `gemini-2.5-flash`)
+   - `GEMINI_API_KEY` = tu clave real
+   - `GEMINI_MODEL` (opcional, por ejemplo `gemini-2.5-flash`)
 5. Deploy.
 
 Si el frontend usa rutas del lado del cliente (SPA), el archivo `vercel.json` del repo ya incluye rewrite a `index.html`.

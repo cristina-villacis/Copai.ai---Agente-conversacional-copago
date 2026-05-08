@@ -13,10 +13,8 @@ import {
   Clock3,
   Cog,
   Compass,
-  Copy,
   Eye,
   EyeOff,
-  FilePlus2,
   HeartPulse,
   History,
   Hospital,
@@ -30,7 +28,6 @@ import {
   ShieldCheck,
   Sparkles,
   Stethoscope,
-  X,
   UserRound,
   Users,
 } from 'lucide-react';
@@ -192,8 +189,6 @@ const plans: InsurancePlan[] = [
 ];
 
 export default function App() {
-  const viteEnv = (import.meta as unknown as { env?: Record<string, string> }).env;
-  const hasGeminiKey = Boolean(viteEnv?.VITE_GEMINI_API_KEY);
   const [currentScreen, setCurrentScreen] = useState<Screen>('landing');
   const [query, setQuery] = useState('dolor toracico');
   const [filters, setFilters] = useState({
@@ -217,7 +212,6 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState('');
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('monthly');
   const [selectedPlan, setSelectedPlan] = useState<InsurancePlan['id']>('recomendado');
-  const [showAiSetup, setShowAiSetup] = useState(false);
   const [latestAgentRecommendation, setLatestAgentRecommendation] = useState<MedicalStructuredFields | null>(null);
 
   const hospitalCatalog = useMemo(() => hospitalCatalogSeed, []);
@@ -295,28 +289,6 @@ export default function App() {
     setTimeout(() => setToastMessage(''), 2400);
   };
 
-  const envTemplate = `VITE_GEMINI_API_KEY=TU_API_KEY_AQUI`;
-
-  const handleDownloadEnvTemplate = () => {
-    const blob = new Blob([`${envTemplate}\n`], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = '.env.local';
-    anchor.click();
-    URL.revokeObjectURL(url);
-    showToast('Plantilla .env.local descargada.');
-  };
-
-  const handleCopyEnvTemplate = async () => {
-    try {
-      await navigator.clipboard.writeText(envTemplate);
-      showToast('Contenido copiado. Pegalo en .env.local');
-    } catch {
-      showToast('No se pudo copiar automaticamente.');
-    }
-  };
-
   const getPriorityTone = (priority: string) => {
     const p = priority.toLowerCase();
     if (p.includes('alta')) return 'border-rose-200 bg-rose-50 text-rose-700';
@@ -373,10 +345,8 @@ export default function App() {
     })) as { role: 'user' | 'model'; parts: { text: string }[] }[];
     const result = await getMedicalAgentResponse(userMessage.text, history);
 
-    if (
-      result.displayText.includes('Configura la variable VITE_GEMINI_API_KEY')
-    ) {
-      showToast('Configura VITE_GEMINI_API_KEY en .env.local y reinicia el servidor.');
+    if (result.displayText.includes('Falta GEMINI_API_KEY')) {
+      showToast('Servicio IA no configurado en servidor. Configura GEMINI_API_KEY en Vercel.');
       setIsAiThinking(false);
       setShowHospitalSkeletons(false);
       return;
@@ -979,16 +949,6 @@ export default function App() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            {!hasGeminiKey && (
-                              <button
-                                type="button"
-                                onClick={() => setShowAiSetup(true)}
-                                className="inline-flex items-center gap-1 rounded-full border border-[#0F6CBD]/20 bg-[#0F6CBD]/10 px-3 py-1 text-xs font-semibold text-[#0F6CBD] hover:bg-[#0F6CBD]/15"
-                              >
-                                <FilePlus2 className="h-3.5 w-3.5" />
-                                Configurar IA
-                              </button>
-                            )}
                             {isAiThinking && (
                               <div className="inline-flex items-center gap-2 rounded-full bg-[#0F6CBD]/10 px-3 py-1 text-xs text-[#0F6CBD]">
                                 <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -1109,11 +1069,7 @@ export default function App() {
                               value={chatInput}
                               onChange={(event) => setChatInput(event.target.value)}
                               className="h-12 w-full bg-transparent text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
-                              placeholder={
-                                hasGeminiKey
-                                  ? 'Ej: dolor de cabeza desde ayer, o dolor de estomago...'
-                                  : 'Configura VITE_GEMINI_API_KEY en .env.local para respuestas reales'
-                              }
+                              placeholder="Ej: dolor de cabeza desde ayer, o dolor de estomago..."
                             />
                             <motion.button
                               whileTap={{ scale: 0.94 }}
@@ -1231,63 +1187,6 @@ export default function App() {
             className="fixed bottom-5 right-5 z-50 rounded-xl border border-[#DDE7F3] bg-white px-4 py-3 text-xs font-medium text-[#1E3A5F] shadow-sm"
           >
             {toastMessage}
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {showAiSetup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#1E3A5F]/35 px-4"
-          >
-            <motion.div
-              initial={{ scale: 0.98, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.98, opacity: 0 }}
-              className="w-full max-w-lg rounded-3xl border border-[#DDE7F3] bg-white p-5"
-            >
-              <div className="mb-3 flex items-start justify-between gap-3">
-                <div>
-                  <h3 className="font-['Poppins'] text-lg font-semibold text-[#1E3A5F]">Configurar IA en un clic</h3>
-                  <p className="mt-1 text-sm text-slate-600">
-                    Descarga o copia la plantilla y guardala como <code>.env.local</code> en la raiz del proyecto.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setShowAiSetup(false)}
-                  className="rounded-lg p-1 text-slate-500 hover:bg-slate-100"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-              <div className="rounded-xl border border-[#DDE7F3] bg-[#F8FBFF] p-3 text-xs text-slate-700">
-                {envTemplate}
-              </div>
-              <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <button
-                  type="button"
-                  onClick={handleDownloadEnvTemplate}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0F6CBD] px-3 py-2 text-xs font-semibold text-white hover:bg-[#0E5CA2]"
-                >
-                  <FilePlus2 className="h-3.5 w-3.5" />
-                  Crear .env.local
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCopyEnvTemplate}
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#0F6CBD]/25 px-3 py-2 text-xs font-semibold text-[#0F6CBD] hover:bg-[#0F6CBD]/5"
-                >
-                  <Copy className="h-3.5 w-3.5" />
-                  Copiar contenido
-                </button>
-              </div>
-              <p className="mt-3 text-xs text-slate-500">
-                Luego reinicia el servidor con <code>npm run dev</code>.
-              </p>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
