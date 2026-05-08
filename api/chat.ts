@@ -1,5 +1,36 @@
 import { GoogleGenAI } from "@google/genai";
-import { HOSPITALS, PLAN_CONFIG, SPECIALTY_NAMES, SYMPTOM_MAPPING } from "../src/constants";
+
+const PLAN_CONFIG = {
+  name: "Plan Básico Plus",
+  coverage: 0.7,
+  copay: 0.3,
+};
+
+const SYMPTOM_MAPPING = {
+  gastroenterology: ["dolor de estómago", "acidez", "náuseas", "estómago", "panza", "digestión"],
+  neurology: ["dolor de cabeza", "migraña", "mareos", "jaqueca", "cerebro"],
+  traumatology: ["dolor de huesos", "golpes", "esguinces", "fractura", "luxación", "huesos", "músculos"],
+};
+
+const HOSPITALS = [
+  { id: "san-juan", name: "Hospital San Juan", zone: "Zona Norte", cost: 50.0 },
+  { id: "central-universitario", name: "Hospital Central Universitario", zone: "Zona Centro", cost: 40.0 },
+  { id: "la-paz", name: "Clínica La Paz", zone: "Zona Sur", cost: 70.0 },
+  { id: "metropolitano", name: "Hospital Metropolitano", zone: "Zona Norte", cost: 55.0 },
+  { id: "vozandes", name: "Hospital Vozandes", zone: "Zona Centro", cost: 48.0 },
+  { id: "pichincha-internacional", name: "Clínica Internacional Pichincha", zone: "Zona Centro", cost: 46.0 },
+  { id: "eugenio-espejo", name: "Hospital Eugenio Espejo", zone: "Centro Norte", cost: 53.0 },
+  { id: "solca", name: "Solca Quito", zone: "Valle de Chillos", cost: 67.0 },
+  { id: "militar", name: "Hospital Militar Regional", zone: "Zona Norte", cost: 44.0 },
+  { id: "los-valles", name: "Hospital de Los Valles", zone: "Cumbayá", cost: 59.0 },
+  { id: "santa-rosa", name: "Hospital Santa Rosa de Tacuri", zone: "Zona Sur", cost: 72.0 },
+];
+
+const SPECIALTY_NAMES: Record<string, string> = {
+  gastroenterology: "Gastroenterología",
+  neurology: "Neurología",
+  traumatology: "Traumatología",
+};
 
 type ChatHistoryItem = { role: "user" | "model"; parts: { text: string }[] };
 type MedicalStructuredFields = {
@@ -154,7 +185,12 @@ export default async function handler(req: any, res: any) {
     res.status(500).json({ error: "Falta GEMINI_API_KEY en variables del servidor." });
     return;
   }
-  const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+  let body: any = {};
+  try {
+    body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
+  } catch {
+    body = {};
+  }
   const userMessage = String(body.userMessage ?? "");
   const history = Array.isArray(body.history) ? (body.history as ChatHistoryItem[]) : [];
 
