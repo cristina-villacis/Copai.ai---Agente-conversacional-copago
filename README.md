@@ -137,3 +137,20 @@ Herramientas utilizadas:
 - Vercel
 - GitHub
 
+---
+
+# HackIAthon
+
+Este proyecto fue desarrollado como parte de participación en el concurso HackIAthon, una competencia enfocada en la creación de soluciones innovadoras utilizando inteligencia artificial.
+
+SaludPredict AI fue diseñado con el objetivo de mejorar la orientación médica inicial de los usuarios mediante un agente conversacional inteligente capaz de analizar síntomas y recomendar centros hospitalarios adecuados.
+
+El proyecto combina:
+
+- Inteligencia Artificial
+- Experiencia de Usuario (UX)
+- Desarrollo Web
+- Sistemas de recomendación
+- Automatización conversacional
+
+para ofrecer una solución moderna, accesible e intuitiva orientada al sector salud.
