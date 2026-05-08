@@ -72,7 +72,7 @@
 
 # 📂 Estructura del proyecto
 
-```bash
+```bash id="ijq95s"
 ├── api/
 │   └── chat.ts
 ├── src/
@@ -84,6 +84,9 @@
 ├── public/
 ├── package.json
 └── vite.config.ts
+```
+
+---
 
 # 🤖 Configuración de IA
 
@@ -110,9 +113,9 @@ para procesar consultas médicas conversacionales y generar recomendaciones inte
 
 | Nombre | Descripción |
 | :--- | :--- |
-| **Cristina Villacís** | Futura Ingeniera en Ciencias de la Computación |
-| **Jareth Rojas** | Futuro Ingeniero en Ciencia de Datos e IA |
-| **Liskeyla Macías** | Analista de Datos y Procesos |
+| **Cristina Villacís** | ` Futura Ingeniera en Ciencias de la Computación ` |
+| **Jareth Rojas** | `Futuro Ingeniero en Ciencia de Datos e IA ` |
+| **Liskeyla Macías** | `Analista de Datos y Procesos `|
 
 ---
 
