@@ -53,6 +53,23 @@ npm run build
 npm run preview
 ```
 
+## Despliegue en Vercel
+
+El proyecto ya está en React + Vite, así que Vercel lo detecta como frontend estático.
+
+1. Entra a [Vercel](https://vercel.com/) y selecciona **Add New Project**.
+2. Importa este repositorio de GitHub.
+3. Configura:
+   - **Framework Preset:** `Vite`
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+4. En **Environment Variables**, agrega:
+   - `VITE_GEMINI_API_KEY` = tu clave real
+   - `VITE_GEMINI_MODEL` (opcional, por ejemplo `gemini-2.5-flash`)
+5. Deploy.
+
+Si el frontend usa rutas del lado del cliente (SPA), el archivo `vercel.json` del repo ya incluye rewrite a `index.html`.
+
 ## Lint / TypeScript
 
 ```bash
